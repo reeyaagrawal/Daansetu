@@ -172,13 +172,17 @@ function closePopup() {
                 </label>
 
                 <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    placeholder="Enter your phone number"
-                    required
-                >
-
+    type="tel"
+    id="phone"
+    name="phone"
+    placeholder="Enter your phone number"
+    pattern="[6-9][0-9]{9}"
+    minlength="10"
+    maxlength="10"
+    inputmode="numeric"
+    title="Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8 or 9"
+    required
+>
 
                 <label for="password">
                     Password <span>*</span>
