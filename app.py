@@ -9,6 +9,7 @@ import math
 import secrets
 from datetime import timedelta
 import hmac
+import re
 
 
 app = Flask(__name__)
@@ -710,6 +711,9 @@ def signup():
         name = request.form["name"]
         email = request.form["email"]
         phone = request.form["phone"]
+        if not re.fullmatch(r"[6-9]\d{9}", phone):
+            error = "Please enter a valid 10-digit Indian mobile number."
+            return render_template("signup.html", error=error)
         password = request.form["password"]
         confirm_password = request.form["confirm-password"]
 
