@@ -1,0 +1,301 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DaanSetu | Small Acts, Big Impact</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+
+        <div class="logo">
+            <a href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', filename='images/DaanSetu.png') }}" alt="DaanSetu Logo">
+            </a>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('campaign') }}">Campaigns</a></li>
+            <li>
+                <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            </li>
+            <li><a href="{{ url_for('impact') }}">Impact</a></li>
+            <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+        </ul>
+
+        <div class="nav-buttons">
+            {% if session.get("user_id") %}
+                <a href="{{ url_for('logout') }}">
+                    <button class="login">Logout</button>
+                </a>
+            {% else %}
+                <a href="{{ url_for('login') }}">
+                    <button class="login">Login</button>
+                </a>
+                <a href="{{ url_for('signup') }}">
+                    <button class="signup">Sign Up</button>
+                </a>
+            {% endif %}
+        </div>
+
+    </nav>
+
+
+    <!-- HERO -->
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <h1>
+                Small Acts,<br>
+                <span>Big Impact.</span>
+            </h1>
+
+            <p>
+                DaanSetu connects your kindness with people
+                who need it most. Donate securely, track your
+                contribution and see the real impact.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a href="{{ url_for('campaign') }}">
+                    <button class="primary-btn">
+                        Explore Campaigns
+                    </button>
+                </a>
+
+                <a href="{{ url_for('how_it_works') }}">
+                    <button class="secondary-btn">
+                        How It Works
+                    </button>
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="hero-image">
+            <img
+                src="{{ url_for('static', filename='images/hero image(plant in hand).jpg') }}"
+                alt="Helping hands holding a plant"
+            >
+        </div>
+
+    </section>
+
+
+    <!-- DYNAMIC STATISTICS -->
+    <section class="stats">
+
+        <div class="stat-card">
+            <h2>₹{{ "%.2f"|format(total_donations / 100000) }}L</h2>
+            <p>Total Donations</p>
+        </div>
+
+        <div class="stat-card">
+            <h2>{{ total_donors }}</h2>
+            <p>Total Donors</p>
+        </div>
+
+        <div class="stat-card">
+            <h2>{{ total_campaigns }}</h2>
+            <p>Total Campaigns</p>
+        </div>
+
+        <div class="stat-card">
+            <h2>{{ total_completed_donations }}</h2>
+            <p>Successful Donations</p>
+        </div>
+
+    </section>
+
+
+    <!-- FEATURED CAMPAIGNS -->
+    <section class="campaign-section">
+
+        <div class="section-heading">
+            <h2>Featured Campaigns</h2>
+            <a href="{{ url_for('campaign') }}">View All →</a>
+        </div>
+
+        <div class="campaigns">
+
+            <div class="campaign-card">
+
+                <div class="campaign-image">
+                    <img
+                        src="{{ url_for('static', filename='images/campaign image-feed the hungry.jpg') }}"
+                        alt="Feed the Hungry campaign"
+                    >
+                </div>
+
+                <div class="campaign-info">
+
+                    <h3>Feed the Hungry</h3>
+
+                    <p>
+                        Help provide nutritious meals to
+                        families in need.
+                    </p>
+
+                    <div class="progress">
+                        <div class="progress-bar"></div>
+                    </div>
+
+                    <div class="raised">
+                        ₹75,000 raised of ₹1,00,000
+                    </div>
+
+                    <a href="{{ url_for('donation') }}">
+                        <button class="donate-btn">Donate Now</button>
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div class="campaign-card">
+
+                <div class="campaign-image">
+                    <img
+                        src="{{ url_for('static', filename='images/campaign image-education for all.jpg') }}"
+                        alt="Education for All campaign"
+                    >
+                </div>
+
+                <div class="campaign-info">
+
+                    <h3>Education for All</h3>
+
+                    <p>
+                        Support quality education for
+                        children who need it.
+                    </p>
+
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 60%;"></div>
+                    </div>
+
+                    <div class="raised">
+                        ₹60,000 raised of ₹1,00,000
+                    </div>
+
+                    <a href="{{ url_for('donation') }}">
+                        <button class="donate-btn">Donate Now</button>
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div class="campaign-card">
+
+                <div class="campaign-image">
+                    <img
+                        src="{{ url_for('static', filename='images/campaign image-healthcare support.jpg') }}"
+                        alt="Healthcare Support campaign"
+                    >
+                </div>
+
+                <div class="campaign-info">
+
+                    <h3>Healthcare Support</h3>
+
+                    <p>
+                        Help provide medical assistance
+                        to people in need.
+                    </p>
+
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 40%;"></div>
+                    </div>
+
+                    <div class="raised">
+                        ₹40,000 raised of ₹1,00,000
+                    </div>
+
+                    <a href="{{ url_for('donation') }}">
+                        <button class="donate-btn">Donate Now</button>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- HOW IT WORKS -->
+    <section class="how">
+
+        <h2>How DaanSetu Works</h2>
+
+        <div class="steps">
+
+            <div class="step">
+                <a href="{{ url_for('campaign') }}" style="text-decoration: none;">
+                    <div class="step-icon">🎯</div>
+                    <h3>Choose a Campaign</h3>
+                    <p>
+                        Find a cause that matters to you.
+                    </p>
+                </a>
+            </div>
+
+            <div class="step">
+                <a href="{{ url_for('donation') }}" style="text-decoration: none;">
+                    <div class="step-icon">💚</div>
+                    <h3>Make a Donation</h3>
+                    <p>
+                        Donate securely through our platform.
+                    </p>
+                </a>
+            </div>
+
+            <div class="step">
+                <a href="{{ url_for('impact') }}" style="text-decoration: none;">
+                    <div class="step-icon">✊</div>
+                    <h3>See the Impact</h3>
+                    <p>
+                        Track how your contribution creates
+                        real-world impact.
+                    </p>
+                </a>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer>
+
+        <p style="font-size: 25px;">DaanSetu</p>
+
+        <p>
+            Connecting kindness with impact.
+        </p>
+
+        <br>
+
+        <p>
+            © 2026 DaanSetu. All rights reserved.
+        </p>
+
+    </footer>
+
+</body>
+</html>

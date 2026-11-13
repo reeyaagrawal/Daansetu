@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - DaanSetu</title>
+     <link rel="stylesheet" href="{{ url_for('static', filename='signup.css') }}">
+</head>
+
+<style>
+.error-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.popup-content {
+    background: white;
+    width: 360px;
+    padding: 30px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    position: relative;
+}
+
+.popup-icon {
+    font-size: 42px;
+    margin-bottom: 10px;
+}
+
+.popup-content h3 {
+    margin: 5px 0 10px;
+    color: #075b32;
+}
+
+.popup-content p {
+    color: #555;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.popup-content button {
+    margin-top: 15px;
+    padding: 10px 28px;
+    border: none;
+    border-radius: 8px;
+    background: #087f3e;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 16px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #777;
+}
+
+.close-btn:hover {
+    color: #222;
+}
+</style>
+
+<script>
+function closePopup() {
+    document.getElementById("errorPopup").style.display = "none";
+}
+</script>
+<body>
+
+    <!-- NAVBAR - SAME AS HOME -->
+    <nav>
+
+         <div class="logo">
+        <a href="{{ url_for('home') }}">
+    <img src="{{ url_for('static', filename='images/DaanSetu.png') }}" alt="DaanSetu Logo">
+</a>
+        </div>
+
+        <ul class="nav-links">
+    <li><a href="{{ url_for('home') }}">Home</a></li>
+    <li><a href="{{ url_for('campaign') }}">Campaigns</a></li>
+    <li>
+    <a href="{{ url_for('dashboard') }}">
+        Dashboard
+    </a>
+</li>
+    <li><a href="{{ url_for('impact') }}">Impact</a></li>
+    <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+</ul>
+        <div class="nav-buttons">
+    {% if session.get("user_id") %}
+        <a href="{{ url_for('logout') }}">
+            <button class="login">Logout</button>
+        </a>
+    {% else %}
+        <a href="{{ url_for('login') }}">
+            <button class="login">Login</button>
+        </a>
+        <a href="{{ url_for('signup') }}">
+            <button class="signup">Sign Up</button>
+        </a>
+    {% endif %}
+</div>
+
+    </nav>
+
+    <!-- SIGN UP SECTION -->
+    <section class="signup-section">
+
+        <div class="signup-box">
+
+            <h1>Create an Account</h1>
+
+            <p class="signup-text">
+                Join DaanSetu and be a part of positive change.
+            </p>
+
+            {% if error %}
+<div class="error-popup" id="errorPopup">
+    <div class="popup-content">
+        <span class="close-btn" onclick="closePopup()">&times;</span>
+        <div class="popup-icon">⚠️</div>
+        <h3>Email Already Registered</h3>
+        <p>{{ error }}</p>
+        <button type="button" onclick="closePopup()">OK</button>
+    </div>
+</div>
+{% endif %}
+
+            <form method="POST" action="{{ url_for('signup') }}">
+
+                <label for="name">
+                    Full Name <span>*</span>
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter your full name"
+                    required
+                >
+
+
+                <label for="email">
+                    Email <span>*</span>
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    required
+                >
+
+
+                <label for="phone">
+                    Phone Number <span>*</span>
+                </label>
+
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="Enter your phone number"
+                    required
+                >
+
+
+                <label for="password">
+                    Password <span>*</span>
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Create a password"
+                    required
+                >
+
+
+                <label for="confirm-password">
+                    Confirm Password <span>*</span>
+                </label>
+
+                <input
+                    type="password"
+                    id="confirm-password"
+                    name="confirm-password"
+                    placeholder="Confirm your password"
+                    required
+                >
+
+
+                <label class="terms">
+                    <input type="checkbox" required>
+                    I agree to the Terms and Conditions <span>*</span>
+                </label>
+
+
+                <button type="submit" class="signup-btn">
+                    Create Account
+                </button>
+
+            </form>
+
+
+            <p class="login-text">
+                Already have an account?
+                <a href="{{ url_for('login') }}">Login</a>
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER - SAME AS HOME -->
+    <footer>
+        <p style="font-size: 25px;">DaanSetu</p>
+        <p>Connecting kindness with impact.</p>
+        <br>
+        <p>© 2026 DaanSetu. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

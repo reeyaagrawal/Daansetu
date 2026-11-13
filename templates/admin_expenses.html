@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Expenses - DaanSetu</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='dashboard.css') }}">
+
+    <style>
+        /* PAGE */
+        body {
+            background: #F7F9F7;
+            color: #26352B;
+        }
+
+        /* NAVBAR — MATCHING dashboard.css */
+        nav {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 7%;
+            border-bottom: 1px solid #EEEEEE;
+            background: #FFFFFF;
+            box-shadow: none;
+            gap: 20px;
+        }
+
+        .logo img {
+            width: 100px;
+            height: 55px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 35px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333333;
+            font-size: 15px;
+            font-weight: 400;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #087F3E;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-buttons .login {
+            display: inline-block;
+            padding: 9px 18px;
+            border: 1px solid #087F3E;
+            background: #FFFFFF;
+            color: #087F3E;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 400;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .nav-buttons .login:hover {
+            background: #087F3E;
+            color: #FFFFFF;
+        }
+
+        /* MAIN CONTENT */
+        .expenses-wrap {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 35px 7% 55px;
+        }
+
+        .page-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .page-heading h1 {
+            color: #075B32;
+            font-size: 30px;
+            margin: 0 0 8px;
+        }
+
+        .subtitle {
+            color: #68756B;
+            margin: 0;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .back-link {
+            display: inline-block;
+            background: #087F3E;
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 7px;
+            font-weight: 600;
+            white-space: nowrap;
+            font-size: 14px;
+            transition: background 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: #075B32;
+        }
+
+        /* CARDS */
+        .card {
+            background: #FFFFFF;
+            padding: 25px;
+            border: 1px solid #E4EBE6;
+            border-radius: 12px;
+            margin-bottom: 22px;
+            box-shadow: 0 3px 12px rgba(26, 60, 39, 0.035);
+        }
+
+        .card h2 {
+            color: #174D31;
+            font-size: 19px;
+            margin: 0 0 7px;
+        }
+
+        .card-subtitle {
+            color: #7B867E;
+            font-size: 13px;
+            line-height: 1.5;
+            margin: 0 0 22px;
+        }
+
+        /* FORM */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 19px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 0;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .field label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #34473A;
+        }
+
+        .field input,
+        .field select,
+        .field textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #D6DED7;
+            border-radius: 7px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            background: #FFFFFF;
+            color: #26352B;
+        }
+
+        .field input:focus,
+        .field select:focus,
+        .field textarea:focus {
+            outline: none;
+            border-color: #087F3E;
+            box-shadow: 0 0 0 3px rgba(8, 127, 62, 0.10);
+        }
+
+        .field textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        .save-button {
+            border: none;
+            border-radius: 7px;
+            padding: 12px 22px;
+            background: #087F3E;
+            color: #FFFFFF;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .save-button:hover {
+            background: #075B32;
+        }
+
+        /* EXPENSE TABLE */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .table-wrapper table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        .table-wrapper th,
+        .table-wrapper td {
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 1px solid #EDF1EE;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .table-wrapper th {
+            background: #F3F8F4;
+            color: #075B32;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .table-wrapper td {
+            color: #526057;
+            overflow-wrap: anywhere;
+        }
+
+        .table-wrapper tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table-wrapper tbody tr:hover {
+            background: #FAFCFA;
+        }
+
+        .table-wrapper .amount {
+            font-weight: 600;
+            color: #075B32;
+            white-space: nowrap;
+        }
+
+        .table-wrapper .empty {
+            text-align: center;
+            color: #7B867E;
+            padding: 25px;
+        }
+
+        /* FOOTER — MATCHING dashboard.css */
+        footer {
+            background: #075B32;
+            color: #FFFFFF;
+            padding: 40px 7%;
+            text-align: center;
+        }
+
+        footer strong {
+            color: #FFFFFF;
+            font-size: 22px;
+        }
+
+        footer p {
+            color: #D8EEE0;
+            margin-top: 7px;
+            line-height: 1.6;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            nav {
+                padding: 0 4%;
+                gap: 15px;
+            }
+
+            .nav-links {
+                gap: 18px;
+            }
+
+            .expenses-wrap {
+                padding: 28px 4% 40px;
+            }
+
+            .page-heading {
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 800px) {
+            nav {
+                height: auto;
+                min-height: 70px;
+                padding: 10px 4%;
+                flex-wrap: wrap;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .logo img {
+                width: 100px;
+                height: 55px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .page-heading {
+                flex-direction: column;
+            }
+
+            .page-heading h1 {
+                font-size: 25px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+
+            .card {
+                padding: 18px;
+            }
+
+            .save-button {
+                width: 100%;
+            }
+
+            footer {
+                padding: 30px 5%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <div class="logo">
+            <a href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', filename='images/DaanSetu.png') }}"
+                     alt="DaanSetu Logo">
+            </a>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('campaign') }}">Campaigns</a></li>
+            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('impact') }}">Impact</a></li>
+            <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+        </ul>
+
+        <div class="nav-buttons">
+            <a class="login" href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="expenses-wrap">
+
+        <header class="page-heading">
+            <div>
+                <h1>Campaign Expenses</h1>
+                <p class="subtitle">
+                    Record and review how campaign funds are being used.
+                </p>
+            </div>
+
+            <a class="back-link" href="{{ url_for('admin_reports') }}">
+                &larr; Back to Reports
+            </a>
+        </header>
+
+        <!-- ADD EXPENSE FORM -->
+        <section class="card">
+            <h2>Record a New Expense</h2>
+            <p class="card-subtitle">
+                Enter the campaign details and the amount spent.
+            </p>
+
+            <form method="POST" action="{{ url_for('admin_expenses') }}">
+                <input type="hidden"
+                       name="_csrf_token"
+                       value="{{ csrf_token() }}">
+
+                <div class="form-grid">
+
+                    <div class="field full-width">
+                        <label for="campaign_id">Campaign *</label>
+
+                        <select id="campaign_id"
+                                name="campaign_id"
+                                required>
+                            <option value="">Select a campaign</option>
+
+                            {% for campaign in campaigns %}
+                            <option value="{{ campaign.campaign_id }}">
+                                {{ campaign.campaign_name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="expense_title">Expense Title *</label>
+                        <input type="text"
+                               id="expense_title"
+                               name="expense_title"
+                               maxlength="150"
+                               placeholder="e.g. Food supplies"
+                               required>
+                    </div>
+
+                    <div class="field">
+                        <label for="amount">Amount (₹) *</label>
+                        <input type="number"
+                               id="amount"
+                               name="amount"
+                               min="0.01"
+                               step="0.01"
+                               placeholder="Enter amount"
+                               required>
+                    </div>
+
+                    <div class="field">
+                        <label for="expense_date">Expense Date *</label>
+                        <input type="date"
+                               id="expense_date"
+                               name="expense_date"
+                               required>
+                    </div>
+
+                    <div class="field full-width">
+                        <label for="description">Description</label>
+                        <textarea id="description"
+                                  name="description"
+                                  rows="3"
+                                  placeholder="Explain how the money was used"></textarea>
+                    </div>
+
+                    <div class="field full-width">
+                        <div>
+                            <button type="submit" class="save-button">
+                                Save Expense
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </section>
+
+        <!-- EXPENSE HISTORY -->
+        <section class="card">
+            <h2>Recorded Expenses</h2>
+            <p class="card-subtitle">
+                Review the expenses recorded against each campaign.
+            </p>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Campaign</th>
+                            <th>Expense</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for expense in expenses %}
+                        <tr>
+                            <td>{{ expense.campaign_name }}</td>
+                            <td>{{ expense.expense_title }}</td>
+                            <td class="amount">
+                                ₹{{ "{:,.2f}".format(expense.amount or 0) }}
+                            </td>
+                            <td>{{ expense.expense_date }}</td>
+                            <td>{{ expense.description or "-" }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="empty">
+                                No expenses recorded yet.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <strong>DaanSetu</strong>
+        <p>Connecting kindness with impact.</p>
+        <p style="font-size: 12px;">
+            © 2026 DaanSetu. All rights reserved.
+        </p>
+    </footer>
+
+</body>
+</html>

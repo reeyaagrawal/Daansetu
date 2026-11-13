@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Campaigns - DaanSetu</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='Campaign.css') }}">
+
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <nav>
+
+        <div class="logo">
+
+            <a href="{{ url_for('home') }}">
+
+                <img
+                    src="{{ url_for('static', filename='images/DaanSetu.png') }}"
+                    alt="DaanSetu Logo"
+                >
+
+            </a>
+
+        </div>
+
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="{{ url_for('home') }}">
+                    Home
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('campaign') }}">
+                    Campaigns
+                </a>
+            </li>
+
+            <li>
+    <a href="{{ url_for('dashboard') }}">
+        Dashboard
+    </a>
+</li>
+
+            <li>
+                <a href="{{ url_for('impact') }}">
+                    Impact
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('contact') }}">
+                    Contact Us
+                </a>
+            </li>
+
+        </ul>
+
+
+        <div class="nav-buttons">
+
+            {% if session.get("user_id") %}
+
+                <a href="{{ url_for('logout') }}">
+
+                    <button class="login">
+                        Logout
+                    </button>
+
+                </a>
+
+            {% else %}
+
+                <a href="{{ url_for('login') }}">
+
+                    <button class="login">
+                        Login
+                    </button>
+
+                </a>
+
+                <a href="{{ url_for('signup') }}">
+
+                    <button class="signup">
+                        Sign Up
+                    </button>
+
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </nav>
+
+
+    <!-- PAGE HEADER -->
+
+    <section class="page-header">
+
+        <h1>
+            Support a Campaign
+        </h1>
+
+        <p>
+            Every contribution can make a difference.
+            Choose a cause that matters to you and be a part
+            of the change.
+        </p>
+
+    </section>
+
+
+    <!-- CAMPAIGNS -->
+
+    <section class="campaign-section">
+
+        <h2>
+            Our Campaigns
+        </h2>
+
+
+        <div class="campaign-grid">
+
+            {% for campaign in campaigns %}
+
+            <div class="campaign-card">
+
+
+<!-- Campaign Image -->
+
+{% if campaign.image_filename %}
+
+    <img
+        src="{{ url_for('static', filename='uploads/campaigns/' ~ campaign.image_filename) }}"
+        alt="{{ campaign.campaign_name }}"
+        class="campaign-image"
+    >
+
+{% elif campaign.campaign_id == 1 %}
+
+    <img
+        src="{{ url_for('static', filename='images/campaign image-feed the hungry.jpg') }}"
+        alt="Feed the Hungry"
+        class="campaign-image"
+    >
+
+{% elif campaign.campaign_id == 2 %}
+
+    <img
+        src="{{ url_for('static', filename='images/campaign image-education for all.jpg') }}"
+        alt="Education for All"
+        class="campaign-image"
+    >
+
+{% elif campaign.campaign_id == 3 %}
+
+    <img
+        src="{{ url_for('static', filename='images/campaign image-healthcare support.jpg') }}"
+        alt="Healthcare Support"
+        class="campaign-image"
+    >
+
+{% elif campaign.campaign_id == 4 %}
+
+    <img
+        src="{{ url_for('static', filename='images/campaign image-clean water initiative.jpg') }}"
+        alt="Clean Water Initiative"
+        class="campaign-image"
+    >
+
+{% elif campaign.campaign_id == 5 %}
+
+    <img
+        src="{{ url_for('static', filename='images/campaign-Dog care.jpg') }}"
+        alt="Dog Care & Rescue"
+        class="campaign-image"
+    >
+
+{% endif %}
+
+                <div class="campaign-content">
+
+
+                    <h3>
+                        {{ campaign.campaign_name }}
+                    </h3>
+
+
+                    <p>
+                        {{ campaign.description }}
+                    </p>
+
+
+                    <!-- PROGRESS BAR -->
+
+                    <div class="progress">
+
+                        <div 
+                            class="progress-bar" 
+                            style="width: {{ campaign.progress }}%;">
+                        </div>
+
+                    </div>
+
+
+                    <!-- AMOUNT -->
+
+                    <div class="amount">
+
+                        <span>
+                            ₹{{ "{:,.0f}".format(campaign.raised_amount) }}
+                            raised
+                        </span>
+
+                        <span>
+                            Goal:
+                            ₹{{ "{:,.0f}".format(campaign.target_amount) }}
+                        </span>
+
+                    </div>
+
+
+                   
+                    <!-- DONATE BUTTON -->
+
+                    {% if campaign.raised_amount >= campaign.target_amount %}
+
+                        <button type="button"
+                                class="donate-btn"
+                                disabled
+                                style="opacity:0.6; cursor:not-allowed;">
+                            Target Achieved
+                        </button>
+
+                        <p style="color:#087f3e;
+                                  font-size:13px;
+                                  line-height:1.5;
+                                  margin-top:10px;">
+                            This campaign has achieved its target.
+                            Please explore other campaigns.
+                        </p>
+
+                    {% else %}
+
+                        <a href="{{ url_for('donation') }}"
+                           class="donate-btn">
+                            Donate Now
+                        </a>
+
+                    {% endif %}
+
+
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <p style="font-size: 25px;">
+            DaanSetu
+        </p>
+
+        <p>
+            Connecting kindness with impact.
+        </p>
+
+        <br>
+
+        <p>
+            © 2026 DaanSetu. All rights reserved.
+        </p>
+
+    </footer>
+
+
+</body>
+
+</html>

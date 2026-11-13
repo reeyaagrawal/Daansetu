@@ -1,0 +1,254 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation Receipt - DaanSetu</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='receipt.css') }}">
+
+    <style>
+        .warning-message {
+            margin: 30px 0;
+            padding: 25px 20px;
+            background: #fff8e8;
+            border: 1px solid #f2d59b;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .warning-icon {
+            font-size: 45px;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .warning-message h3 {
+            color: #8a5a00;
+            margin: 12px 0;
+        }
+
+        .warning-message p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .error-receipt .receipt-header h2 {
+            color: #8a5a00;
+        }
+    </style>
+</head>
+
+
+<body>
+
+<nav>
+    <div class="logo">
+        <a href="{{ url_for('home') }}">
+            <img src="{{ url_for('static', filename='images/DaanSetu.png') }}" alt="DaanSetu Logo">
+        </a>
+    </div>
+
+    <ul class="nav-links">
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="{{ url_for('campaign') }}">Campaigns</a></li>
+        <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('impact') }}">Impact</a></li>
+        <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+    </ul>
+
+    <div class="nav-buttons">
+        {% if session.get("user_id") %}
+            <a href="{{ url_for('logout') }}">
+                <button class="login">Logout</button>
+            </a>
+        {% else %}
+            <a href="{{ url_for('login') }}">
+                <button class="login">Login</button>
+            </a>
+
+            <a href="{{ url_for('signup') }}">
+                <button class="signup">Sign Up</button>
+            </a>
+        {% endif %}
+    </div>
+</nav>
+
+
+<section class="receipt-section">
+
+    {% if error %}
+
+    <!-- Warning Interface -->
+    <div class="receipt error-receipt">
+
+        <div class="receipt-header">
+            <h1> DaanSetu</h1>
+            <h2>Receipt Unavailable</h2>
+            <p>Secure Donation Tracking</p>
+        </div>
+
+        <div class="warning-message">
+            <span class="warning-icon">⚠️</span>
+
+            <h3>Receipt Not Found</h3>
+
+            <p>
+                This receipt is unavailable or you don't have
+                permission to access it.
+            </p>
+
+            <p>
+                Please check the receipt ID or return to your dashboard.
+            </p>
+        </div>
+
+        <div class="receipt-buttons">
+            <a href="{{ url_for('dashboard') }}">
+                <button class="dashboard-btn">
+                    Go to Dashboard
+                </button>
+            </a>
+        </div>
+
+    </div>
+
+    {% else %}
+
+    <!-- Valid Donation Receipt -->
+    <div class="receipt">
+
+        <div class="receipt-header">
+            <h1>💚 DaanSetu</h1>
+            <h2>Donation Receipt</h2>
+            <p>Thank you for your generous contribution!</p>
+        </div>
+
+        <div class="success">
+            ✓ Donation Successful
+        </div>
+
+        <div class="receipt-details">
+
+            <div class="detail">
+                <span>Donation ID</span>
+                <strong>#{{ donation.donation_id }}</strong>
+            </div>
+
+            <div class="detail">
+                <span>Donor Name</span>
+                <strong>{{ donation.full_name }}</strong>
+            </div>
+
+            <div class="detail">
+                <span>Email</span>
+                <strong>{{ donation.email }}</strong>
+            </div>
+
+            <div class="detail">
+                <span>Campaign</span>
+                <strong>{{ donation.campaign_name }}</strong>
+            </div>
+
+            <div class="detail amount">
+                <span>Donation Amount</span>
+                <strong>₹{{ donation.amount }}</strong>
+            </div>
+
+            <div class="detail">
+                <span>Payment Method</span>
+                <strong>{{ donation.payment_method|upper }}</strong>
+            </div>
+
+            <div class="detail">
+                <span>Date &amp; Time</span>
+                <strong>{{ donation.donation_date }}</strong>
+            </div>
+
+            <div class="detail">
+                <span>Status</span>
+                <strong class="completed">{{ donation.status }}</strong>
+            </div>
+
+        </div>
+
+        <div class="thank-you">
+            <p>
+                Your contribution can make a real difference.
+            </p>
+
+            <p>
+                Thank you for being a part of DaanSetu. 🌍
+            </p>
+        </div>
+
+        <div class="receipt-buttons">
+            <button onclick="window.print()" class="print-btn">
+                🖨 Print Receipt
+            </button>
+
+            <a href="{{ url_for('dashboard') }}">
+                <button class="dashboard-btn">
+                    Go to Dashboard
+                </button>
+            </a>
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</section>
+
+
+<footer>
+    <p style="font-size: 25px;">DaanSetu</p>
+    <p>Connecting kindness with impact.</p>
+    <br>
+    <p>© 2026 DaanSetu. All rights reserved.</p>
+</footer>
+
+
+{% if not error and play_donation_sound %}
+<audio id="donationSuccessSound" preload="auto">
+    <source
+        src="{{ url_for('static', filename='sounds/donation-success.wav') }}"
+        type="audio/wav">
+</audio>
+
+<button
+    id="playSoundButton"
+    type="button"
+    style="display:none; margin:15px auto; padding:10px 16px;
+           background:#087f3e; color:white; border:none;
+           border-radius:8px; cursor:pointer;">
+    🔔 Play Confirmation Sound
+</button>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const sound = document.getElementById("donationSuccessSound");
+    const button = document.getElementById("playSoundButton");
+
+    if (!sound || !button) return;
+
+    sound.volume = 1.0;
+
+    sound.play().then(function () {
+        button.style.display = "none";
+    }).catch(function () {
+        button.style.display = "block";
+    });
+
+    button.addEventListener("click", function () {
+        sound.play().catch(function () {
+            alert("Sound could not be played. Please check your browser settings.");
+        });
+    });
+});
+</script>
+{% endif %}
+
+</body>
+</html>

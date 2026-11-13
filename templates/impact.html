@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Impact - DaanSetu</title>
+
+ <link rel="stylesheet" href="{{ url_for('static', filename='impact.css') }}">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+
+         <div class="logo">
+        <a href="{{ url_for('home') }}">
+    <img src="{{ url_for('static', filename='images/DaanSetu.png') }}" alt="DaanSetu Logo">
+</a>
+        </div>
+
+        <ul class="nav-links">
+    <li><a href="{{ url_for('home') }}">Home</a></li>
+    <li><a href="{{ url_for('campaign') }}">Campaigns</a></li>
+    <li>
+    <a href="{{ url_for('dashboard') }}">
+        Dashboard
+    </a>
+</li>
+    <li><a href="{{ url_for('impact') }}">Impact</a></li>
+    <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+</ul>
+        <div class="nav-buttons">
+    {% if session.get("user_id") %}
+        <a href="{{ url_for('logout') }}">
+            <button class="login">Logout</button>
+        </a>
+    {% else %}
+        <a href="{{ url_for('login') }}">
+            <button class="login">Login</button>
+        </a>
+        <a href="{{ url_for('signup') }}">
+            <button class="signup">Sign Up</button>
+        </a>
+    {% endif %}
+</div>
+
+    </nav>
+
+
+    <!-- IMPACT HEADER -->
+    <section class="impact-header">
+
+        <h1>Our Impact</h1>
+
+        <p>
+            Together, small acts of kindness are creating
+            meaningful change in people's lives.
+        </p>
+
+    </section>
+
+
+    <!-- IMPACT STATS -->
+    
+<!-- IMPACT STATS -->
+<section class="impact-stats">
+
+    <div class="impact-card">
+        <h2>₹{{ "{:,.2f}".format(impact_stats.total_raised) }}</h2>
+        <p>Total Donations Raised</p>
+    </div>
+
+    <div class="impact-card">
+        <h2>{{ "{:,}".format(impact_stats.total_donors) }}</h2>
+        <p>People Who Donated</p>
+    </div>
+
+    <div class="impact-card">
+       <h2>{{ "{:,}".format(total_campaigns) }}</h2>
+<p>Total Campaigns</p>
+    </div>
+
+    <div class="impact-card">
+        <h2>{{ "{:,}".format(impact_stats.successful_donations) }}</h2>
+        <p>Successful Donations</p>
+    </div>
+
+</section>
+
+
+
+
+<!-- OVERALL FUNDRAISING PROGRESS -->
+<section class="overall-fundraising">
+
+    <h2>Our Fundraising Progress</h2>
+
+    <p class="fundraising-description">
+        Every contribution brings us closer to our collective goals.
+    </p>
+
+    <div class="fundraising-summary">
+
+        <div class="fundraising-amount">
+            <span>Total Raised</span>
+            <h3>₹{{ "{:,.2f}".format(impact_stats.total_raised) }}</h3>
+        </div>
+
+        <div class="fundraising-amount">
+            <span>Overall Progress</span>
+            <h3>{{ "%.1f"|format(overall_progress) }}%</h3>
+        </div>
+
+        <div class="impact-stat-card">
+    <h2>{{ "{:,}".format(goals_achieved) }}</h2>
+    <p>Goals Achieved</p>
+</div>
+
+    </div>
+
+    <div class="overall-progress-track">
+        <div
+            class="overall-progress-fill"
+            style="width: {{ overall_progress }}%;">
+        </div>
+    </div>
+
+    <p class="overall-progress-note">
+        Progress is calculated using completed donations and the combined targets of all campaigns.
+    </p>
+
+</section>
+
+
+
+<!-- CAMPAIGN TRANSPARENCY -->
+<section class="campaign-transparency">
+
+    <h2>Campaign Progress</h2>
+
+    <p>
+        See how much each campaign has raised
+        towards its fundraising goal.
+    </p>
+
+    <div class="campaign-progress-grid">
+
+        {% for campaign in campaign_progress %}
+
+        <div class="campaign-progress-card">
+
+            <h3>{{ campaign.campaign_name }}</h3>
+
+            
+{% if campaign.progress >= 100 %}
+    <span class="campaign-status completed">
+        Goal Achieved
+    </span>
+{% else %}
+    <span class="campaign-status fundraising">
+        Fundraising
+    </span>
+{% endif %}
+
+
+            <p class="campaign-category">
+                {{ campaign.category or 'Community Support' }}
+            </p>
+
+            <div class="campaign-progress-info">
+                <span>
+                    ₹{{ "{:,.2f}".format(campaign.raised_amount) }} raised
+                </span>
+
+                <span>
+                    Goal: ₹{{ "{:,.2f}".format(campaign.target_amount) }}
+                </span>
+            </div>
+
+            <div class="progress-track">
+                <div
+                    class="progress-fill"
+                    style="width: {{ campaign.progress }}%;">
+                </div>
+            </div>
+
+            <p class="progress-percentage">
+                {{ "%.1f"|format(campaign.progress) }}% of goal
+            </p>
+
+        </div>
+
+        {% else %}
+
+        <p>No campaigns available yet.</p>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+    <!-- IMPACT AREAS -->
+    <section class="impact-section">
+
+        <h2>Where Your Donations Make a Difference</h2>
+
+        <div class="impact-grid">
+
+            <div class="impact-box">
+                <a href="{{ url_for('campaign' , category='Food Support') }}"  style="text-decoration: none;">
+                <div class="impact-icon">🍲</div>
+
+                <h3>Food Support</h3>
+
+                <p>
+                    Donations help provide nutritious meals
+                    to families and individuals in need.
+                </p>
+                </a>
+            </div>
+
+
+            <div class="impact-box">
+                <a href="{{ url_for('campaign', category='Education') }}"
+   style="text-decoration: none;">
+                <div class="impact-icon">📚</div>
+
+                <h3>Education</h3>
+
+                <p>
+                    Contributions help children access books,
+                    learning materials and educational resources.
+                </p>
+                </a>
+            </div>
+
+
+            <div class="impact-box">
+                
+                <a href="{{ url_for('campaign', category='Healthcare') }}" style="text-decoration: none;">
+
+                <div class="impact-icon">🏥</div>
+
+                <h3>Healthcare</h3>
+
+                <p>
+                    Your support helps people receive essential
+                    medical care, medicines and treatment.
+                </p>
+                </a>
+            </div>
+
+
+
+            <div class="impact-box">
+    <a href="{{ url_for('campaign', category='Clean Water') }}"
+       style="text-decoration: none;">
+
+        <div class="impact-icon">💧</div>
+
+        <h3>Clean Water</h3>
+
+        <p>
+            Donations support initiatives that provide
+            communities with safe and clean drinking water.
+        </p>
+
+    </a>
+</div>
+            
+
+
+            <div class="impact-box">
+                                <a href="{{ url_for('campaign' ,category='Animal Care ') }}" style="text-decoration: none;">
+
+                <div class="impact-icon">🐾</div>
+
+                <h3>Animal Care</h3>
+
+                <p>
+                    Contributions help provide food, shelter
+                    and medical care to animals in need.
+                </p>
+                                </a>
+            </div>
+
+
+            <div class="impact-box">
+                                <a href="{{ url_for('campaign', category='Community Support') }}" style="text-decoration: none;">
+
+                <div class="impact-icon">❤️</div>
+
+                <h3>Community Support</h3>
+
+                <p>
+                    Your kindness helps communities become
+                    stronger, healthier and more sustainable.
+                </p>
+                                </a>
+            </div>
+
+
+            
+        
+<div class="impact-box">
+    <a href="{{ url_for('campaign', category='Women Empowerment') }}"
+       style="text-decoration: none;">
+
+        <div class="impact-icon">👩‍👩‍👧</div>
+
+        <h3>Women Empowerment</h3>
+
+        <p>
+            Your support helps women access education,
+            skill development, healthcare and opportunities
+            for a brighter and independent future.
+        </p>
+
+    </a>
+</div>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- IMPACT MESSAGE -->
+    <section class="impact-message">
+
+        <h2>Every Donation Counts</h2>
+
+        <p>
+            Whether it is a small contribution or a large one,
+            every donation helps create a positive impact.
+            DaanSetu makes it easier to donate, track your
+            contribution and understand where your support goes.
+        </p>
+
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer>
+
+        <p style="font-size: 25px;">DaanSetu</p>
+
+        <p>
+            Connecting kindness with impact.
+        </p>
+
+        <br>
+
+        <p>
+            © 2026 DaanSetu. All rights reserved.
+        </p>
+
+    </footer>
+
+</body>
+</html>

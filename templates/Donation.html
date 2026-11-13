@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Donate - DaanSetu</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='Donation.css') }}">
+
+</head>
+
+
+
+</body>
+
+
+<body>
+
+
+{% if phone_payment %}
+
+<!-- ================================================= -->
+<!-- PHONE PAYMENT SCREEN -->
+<!-- ================================================= -->
+
+<div style="
+    min-height:100vh;
+    background:#f5f7fa;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+">
+
+    <div style="
+        width:380px;
+        max-width:100%;
+        background:white;
+        padding:30px;
+        border-radius:20px;
+        text-align:center;
+        box-shadow:0 10px 35px rgba(0,0,0,0.15);
+    ">
+
+        <div style="
+            font-size:30px;
+            font-weight:bold;
+            color:#075b32;
+            margin-bottom:5px;
+        ">
+            DaanSetu
+        </div>
+
+
+        <p style="
+            color:#777;
+            margin-bottom:30px;
+        ">
+            Secure Demo Payment
+        </p>
+
+
+        <div style="
+            background:#f4f8f5;
+            padding:20px;
+            border-radius:15px;
+            margin-bottom:25px;
+        ">
+
+            <p style="
+                margin:0 0 8px;
+                color:#666;
+                font-size:14px;
+            ">
+                Donation Amount
+            </p>
+
+
+            <div style="
+                font-size:38px;
+                font-weight:bold;
+                color:#087f3e;
+            ">
+                ₹{{ payment.amount }}
+            </div>
+
+        </div>
+
+
+        <p style="
+            color:#555;
+            margin-bottom:25px;
+        ">
+            You are making a donation through UPI.
+        </p>
+
+
+        {% if payment.status == "pending" %}
+
+        <form method="POST"
+              action="{{ url_for('demo_pay',
+              payment_token=payment_token) }}">
+
+              <input type="hidden"
+       name="_csrf_token"
+       value="{{ csrf_token() }}">
+
+            <button type="submit"
+                    style="
+                        width:100%;
+                        padding:15px;
+                        border:none;
+                        border-radius:10px;
+                        background:#087f3e;
+                        color:white;
+                        font-size:18px;
+                        font-weight:bold;
+                        cursor:pointer;
+                    ">
+
+                Pay ₹{{ payment.amount }}
+
+            </button>
+
+        </form>
+
+       
+
+
+        {% else %}
+
+        <div style="
+            padding:15px;
+            background:#e8f7ee;
+            color:#087f3e;
+            border-radius:10px;
+            font-weight:bold;
+        ">
+
+            ✅ Payment Successful
+
+        </div>
+
+
+        <script>
+            window.addEventListener("load", function () {
+            playDonationSuccessSound();
+    });
+</script>
+
+        {% if payment.donation_id %}
+
+        <a href="{{ url_for('receipt',
+                           donation_id=payment.donation_id) }}"
+           style="
+                display:inline-block;
+                margin-top:18px;
+                padding:12px 25px;
+                background:#075b32;
+                color:white;
+                text-decoration:none;
+                border-radius:8px;
+                font-weight:bold;
+           ">
+
+            View Receipt
+
+        </a>
+
+        {% endif %}
+
+        {% endif %}
+
+
+        <p style="
+            margin-top:20px;
+            font-size:12px;
+            color:#999;
+        ">
+            Demo payment for DaanSetu project
+        </p>
+
+
+    </div>
+
+</div>
+
+
+{% else %}
+
+
+<!-- ================================================= -->
+<!-- NORMAL DONATION PAGE -->
+<!-- ================================================= -->
+
+
+<!-- NAVBAR -->
+
+<nav>
+
+    <div class="logo">
+
+        <a href="{{ url_for('home') }}">
+
+            <img
+                src="{{ url_for('static',
+                filename='images/DaanSetu.png') }}"
+                alt="DaanSetu Logo">
+
+        </a>
+
+    </div>
+
+
+    <ul class="nav-links">
+
+        <li>
+            <a href="{{ url_for('home') }}">
+                Home
+            </a>
+        </li>
+
+
+        <li>
+            <a href="{{ url_for('campaign') }}">
+                Campaigns
+            </a>
+        </li>
+
+
+        <li>
+    <a href="{{ url_for('dashboard') }}">
+        Dashboard
+    </a>
+</li>
+
+
+
+        <li>
+            <a href="{{ url_for('impact') }}">
+                Impact
+            </a>
+        </li>
+
+
+        <li>
+            <a href="{{ url_for('contact') }}">
+                Contact Us
+            </a>
+        </li>
+
+    </ul>
+
+
+    <div class="nav-buttons">
+
+        {% if session.get("user_id") %}
+
+            <a href="{{ url_for('logout') }}">
+
+                <button class="login">
+                    Logout
+                </button>
+
+            </a>
+
+        {% else %}
+
+            <a href="{{ url_for('login') }}">
+
+                <button class="login">
+                    Login
+                </button>
+
+            </a>
+
+
+            <a href="{{ url_for('signup') }}">
+
+                <button class="signup">
+                    Sign Up
+                </button>
+
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</nav>
+
+
+
+<!-- ================================================= -->
+<!-- PAGE HEADER -->
+<!-- ================================================= -->
+
+<section class="page-header">
+
+    <h1>
+        Make a Donation
+    </h1>
+
+    <p>
+        Your small contribution can create a big impact.
+        Choose a campaign and support a meaningful cause.
+    </p>
+
+</section>
+
+
+
+<!-- ================================================= -->
+<!-- DONATION SECTION -->
+<!-- ================================================= -->
+
+<section class="donation-section">
+
+
+    <!-- DONATION INFO -->
+
+    <div class="donation-info">
+
+        <h2>
+            Your Contribution Matters
+        </h2>
+
+
+        <p>
+            Every donation helps us support people, communities,
+            animals, and important social causes.
+        </p>
+
+
+        <div class="impact-box">
+
+            <h3>
+                Small Donation
+            </h3>
+
+            <p>
+                Can help provide essential support to someone in need.
+            </p>
+
+        </div>
+
+
+        <div class="impact-box">
+
+            <h3>
+                👍 Regular Donation
+            </h3>
+
+            <p>
+                Helps campaigns continue their work and reach more people.
+            </p>
+
+        </div>
+
+
+        <div class="impact-box">
+
+            <h3>
+                🌍 Your Impact
+            </h3>
+
+            <p>
+                Track how your contribution makes a difference.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- DONATION FORM -->
+
+    <div class="donation-form">
+
+        <h2>
+            Donation Details
+        </h2>
+
+
+        {% if success %}
+
+        <div class="success-message">
+            {{ success }}
+        </div>
+
+        {% endif %}
+
+
+        
+{% if error %}
+<div class="donation-alert" id="donationAlert">
+    <div class="alert-icon">!</div>
+    <div class="alert-content">
+        <strong>Campaign target achieved!</strong>
+        <p>{{ error }}</p>
+    </div>
+    <button type="button"
+            class="alert-close"
+            onclick="document.getElementById('donationAlert').remove()">
+        &times;
+    </button>
+</div>
+{% endif %}
+
+
+        
+            
+<form method="POST"
+      action="{{ url_for('donation') }}">
+
+    <input type="hidden"
+           name="_csrf_token"
+           value="{{ csrf_token() }}">
+
+
+
+            <label for="campaign">
+                Choose Campaign
+            </label>
+
+
+<select id="campaign" name="campaign" required>
+    <option value="">Select a campaign</option>
+
+    {% for campaign in campaigns %}
+        <option value="{{ campaign.campaign_id }}">
+            {{ campaign.campaign_name }}
+        </option>
+    {% endfor %}
+</select>
+
+
+
+            <label>
+                Donation Amount
+            </label>
+
+
+            <div class="amount-buttons">
+
+                <button type="button">
+                    ₹100
+                </button>
+
+                <button type="button">
+                    ₹500
+                </button>
+
+                <button type="button">
+                    ₹1000
+                </button>
+
+                <button type="button">
+                    ₹2000
+                </button>
+
+            </div>
+
+
+
+            <label for="custom-amount">
+                Custom Amount
+            </label>
+
+
+            <input
+                type="number"
+                id="custom-amount"
+                name="amount"
+                placeholder="Enter amount"
+                min="1"
+                required
+            >
+
+
+
+            <label for="name">
+                Donor Name
+            </label>
+
+
+            <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Enter your name"
+            >
+
+
+
+            <label for="email">
+                Email
+            </label>
+
+
+            <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email"
+            >
+
+
+
+            <label>
+                Payment Method
+            </label>
+
+
+            <div class="payment-methods">
+
+                <label class="payment-option">
+
+                    <input
+                        type="radio"
+                        name="payment"
+                        value="upi"
+                        required
+                    >
+
+                    UPI
+
+                </label>
+
+
+                <label class="payment-option">
+
+                    <input
+                        type="radio"
+                        name="payment"
+                        value="card"
+                    >
+
+                    Card
+
+                </label>
+
+
+                <label class="payment-option">
+
+                    <input
+                        type="radio"
+                        name="payment"
+                        value="netbanking"
+                    >
+
+                    Net Banking
+
+                </label>
+
+            </div>
+
+
+
+            <button type="submit"
+                    class="donate-btn">
+
+                Proceed to Donate
+
+            </button>
+
+
+        </form>
+
+
+
+        <!-- ================================================= -->
+        <!-- UPI POPUP -->
+        <!-- ================================================= -->
+
+
+        {% if show_upi %}
+
+        <div class="upi-overlay">
+
+            <div class="upi-popup">
+
+
+                <button
+                    type="button"
+                    class="upi-close"
+                    onclick="closeUPI()">
+
+                    ×
+
+                </button>
+
+
+                <h2>
+                    UPI Payment
+                </h2>
+
+
+                <p class="upi-subtitle">
+                    Scan the QR code to make your donation
+                </p>
+
+
+                <div class="upi-amount">
+
+                    ₹{{ upi_amount }}
+
+                </div>
+
+
+                <div class="qr-box">
+
+                    <img
+                        src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={{ request.host_url }}demo-payment/{{ payment_token }}"
+                        alt="DaanSetu Payment QR">
+
+                </div>
+
+
+                <!-- <p class="scan-text">
+
+                    📱 Scan this QR using your phone
+
+                </p> -->
+
+
+                <div class="upi-id">
+
+                    📱 Scan this QR with your phone
+
+                </div>
+
+
+                <p class="demo-note">
+
+                    Scan the QR code with your phone
+                    to continue payment.
+
+                </p>
+
+
+                <p class="demo-note">
+
+                    Demo payment for project demonstration
+
+                </p>
+
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+    </div>
+
+</section>
+
+
+
+<!-- ================================================= -->
+<!-- FOOTER -->
+<!-- ================================================= -->
+
+<footer>
+
+    <p style="font-size:25px;">
+        DaanSetu
+    </p>
+
+    <p>
+        Connecting kindness with impact.
+    </p>
+
+    <br>
+
+    <p>
+        © 2026 DaanSetu. All rights reserved.
+    </p>
+
+</footer>
+
+
+
+<!-- ================================================= -->
+<!-- JAVASCRIPT -->
+<!-- ================================================= -->
+
+<script>
+
+
+/* ================================================= */
+/* AMOUNT BUTTONS */
+/* ================================================= */
+
+
+const amountButtons =
+    document.querySelectorAll(".amount-buttons button");
+
+
+const customAmount =
+    document.getElementById("custom-amount");
+
+
+amountButtons.forEach(button => {
+
+    button.addEventListener("click", function () {
+
+        if (customAmount) {
+
+            customAmount.value =
+                this.innerText.replace("₹", "");
+
+        }
+
+    });
+
+});
+
+
+
+/* ================================================= */
+/* CLOSE UPI POPUP */
+/* ================================================= */
+
+
+function closeUPI() {
+
+    const popup =
+        document.querySelector(".upi-overlay");
+
+
+    if (popup) {
+
+        popup.style.display = "none";
+
+    }
+
+}
+
+
+</script>
+
+
+
+{% endif %}
+
+
+
+<!-- ================================================= -->
+<!-- LAPTOP PAYMENT STATUS CHECKING -->
+<!-- ================================================= -->
+
+
+{% if show_upi and payment_token %}
+
+<script>
+
+
+function checkPaymentStatus() {
+
+
+    fetch(
+        "{{ url_for('payment_status',
+        payment_token=payment_token) }}"
+    )
+
+
+    .then(response => response.json())
+
+
+    .then(data => {
+
+    if (data.status === "paid") {
+    /* Stop checking */
+        clearInterval(paymentChecker);
+
+    /* Play donation success sound */
+        playDonationSuccessSound();
+
+
+
+            /* Show success message */
+
+            const popup =
+                document.querySelector(".upi-popup");
+
+
+            if (popup) {
+
+
+                popup.innerHTML = `
+
+                    <button
+                        type="button"
+                        class="upi-close"
+                        onclick="closeUPI()">
+
+                        ×
+
+                    </button>
+
+
+                    <div style="
+                        padding:30px 10px;
+                        text-align:center;
+                    ">
+
+
+                        <div style="
+                            font-size:60px;
+                            margin-bottom:15px;
+                        ">
+
+                            ✅
+
+                        </div>
+
+
+                        <h2 style="
+                            color:#087f3e;
+                            margin-bottom:10px;
+                        ">
+
+                            Payment Successful
+
+                        </h2>
+
+
+                        <p style="
+                            color:#666;
+                            margin-bottom:20px;
+                        ">
+
+                            Your donation has been completed successfully.
+
+                        </p>
+
+
+                        <div style="
+                            font-size:28px;
+                            font-weight:bold;
+                            color:#087f3e;
+                            margin-bottom:25px;
+                        ">
+
+                            ₹{{ upi_amount }}
+
+                        </div>
+
+
+                        <a
+                            href="/receipt/${data.donation_id}"
+                            style="
+                                display:inline-block;
+                                padding:12px 25px;
+                                background:#075b32;
+                                color:white;
+                                text-decoration:none;
+                                border-radius:8px;
+                                font-weight:bold;
+                            ">
+
+                            View Receipt
+
+                        </a>
+
+
+                    </div>
+
+                `;
+
+            }
+
+        }
+
+    })
+
+
+    .catch(error => {
+
+        console.log(
+            "Payment status check error:",
+            error
+        );
+
+    });
+
+}
+
+
+
+/* Check every 1 second */
+
+const paymentChecker =
+    setInterval(
+        checkPaymentStatus,
+        1000
+    );
+
+
+</script>
+
+{% endif %}
+
+<audio id="donationSuccessSound" preload="auto">
+    <source
+        src="{{ url_for('static', filename='sounds/donation-success.wav') }}"
+        type="audio/wav">
+</audio>
+
+<script>
+function playDonationSuccessSound() {
+    const sound = document.getElementById("donationSuccessSound");
+
+    if (!sound) return;
+
+    sound.currentTime = 0;
+
+    sound.play().catch(error => {
+        console.log("Sound playback blocked:", error);
+    });
+}
+</script>
+
+</body>
+
+</html>

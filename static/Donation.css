@@ -1,0 +1,593 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #ffffff;
+    color: #1f2937;
+}
+
+
+/* NAVBAR - SAME AS HOME */
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    width: 100px;
+    height: 55px;
+    object-fit: contain;
+    display: block;
+}
+
+nav {
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 7%;
+    border-bottom: 1px solid #eeeeee;
+    background: white;
+}
+
+.nav-links {
+    display: flex;
+    gap: 35px;
+    list-style: none;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #333;
+    font-size: 15px;
+}
+
+.nav-links a:hover {
+    color: #087f3e;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.login {
+    padding: 9px 18px;
+    border: 1px solid #087f3e;
+    background: white;
+    color: #087f3e;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.signup {
+    padding: 9px 18px;
+    border: none;
+    background: #087f3e;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+
+/* PAGE HEADER */
+
+.page-header {
+    text-align: center;
+    padding: 70px 20px 55px;
+    background: #e9f7ef;
+}
+
+.page-header h1 {
+    font-size: 42px;
+    color: #146c43;
+    margin-bottom: 15px;
+}
+
+.page-header p {
+    max-width: 650px;
+    margin: auto;
+    color: #555;
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+
+/* DONATION SECTION */
+
+.donation-section {
+    padding: 60px 7%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+}
+
+
+/* LEFT SIDE */
+
+.donation-info h2 {
+    font-size: 30px;
+    color: #146c43;
+    margin-bottom: 15px;
+}
+
+.donation-info > p {
+    color: #666;
+    line-height: 1.7;
+    margin-bottom: 30px;
+    max-width: 500px;
+}
+
+.impact-box {
+    padding: 20px;
+    margin-bottom: 18px;
+    background: #f7fbf8;
+    border-left: 4px solid #087f3e;
+    border-radius: 6px;
+}
+
+.impact-box h3 {
+    color: #146c43;
+    margin-bottom: 8px;
+}
+
+.impact-box p {
+    color: #666;
+    line-height: 1.5;
+}
+
+
+/* DONATION FORM */
+
+.donation-form {
+    background: #f7fbf8;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #e5e5e5;
+}
+
+.donation-form h2 {
+    color: #146c43;
+    font-size: 26px;
+    margin-bottom: 25px;
+}
+
+.donation-form form {
+    display: flex;
+    flex-direction: column;
+}
+
+.donation-form label {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 7px;
+}
+
+.donation-form select,
+.donation-form input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d5d5d5;
+    border-radius: 6px;
+    margin-bottom: 18px;
+    font-size: 14px;
+    background: white;
+}
+
+.donation-form select:focus,
+.donation-form input:focus {
+    outline: none;
+    border-color: #087f3e;
+}
+
+
+/* AMOUNT BUTTONS */
+
+.amount-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.amount-buttons button {
+    padding: 10px;
+    border: 1px solid #087f3e;
+    background: white;
+    color: #087f3e;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.amount-buttons button:hover {
+    background: #087f3e;
+    color: white;
+}
+
+
+/* PAYMENT METHODS */
+
+.payment-methods {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.payment-option {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #d5d5d5;
+    background: white;
+    border-radius: 6px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.payment-option input {
+    width: auto;
+    margin: 0 5px 0 0;
+}
+
+
+/* DONATE BUTTON */
+
+.donate-btn {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    background: #087f3e;
+    color: white;
+    border-radius: 7px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.donate-btn:hover {
+    background: #075b32;
+}
+
+
+/* FOOTER - SAME AS HOME */
+
+footer {
+    background: #075b32;
+    color: white;
+    padding: 40px 7%;
+    text-align: center;
+}
+
+footer p {
+    color: #d8eee0;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+
+    .nav-links {
+        display: none;
+    }
+
+    .donation-section {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 40px 7%;
+    }
+
+    .page-header h1 {
+        font-size: 35px;
+    }
+
+    .amount-buttons {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .payment-methods {
+        flex-direction: column;
+    }
+}
+
+/* ============================= */
+/* UPI PAYMENT POPUP */
+/* ============================= */
+
+.upi-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0, 0, 0, 0.65);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 9999;
+}
+
+
+/* POPUP BOX */
+
+.upi-popup {
+    position: relative;
+
+    width: 420px;
+    max-width: 90%;
+
+    background: white;
+    border-radius: 18px;
+
+    padding: 30px;
+
+    text-align: center;
+
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+
+    animation: popupOpen 0.25s ease;
+}
+
+
+/* POPUP ANIMATION */
+
+@keyframes popupOpen {
+
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+
+/* CLOSE BUTTON */
+
+.upi-close {
+    position: absolute;
+
+    top: 12px;
+    right: 16px;
+
+    border: none;
+    background: none;
+
+    font-size: 30px;
+
+    color: #555;
+
+    cursor: pointer;
+}
+
+.upi-close:hover {
+    color: #d62828;
+}
+
+
+/* HEADING */
+
+.upi-popup h2 {
+    margin-top: 5px;
+    margin-bottom: 8px;
+
+    color: #075b32;
+
+    font-size: 28px;
+}
+
+
+/* SUBTITLE */
+
+.upi-subtitle {
+    margin-bottom: 15px;
+
+    color: #666;
+
+    font-size: 15px;
+}
+
+
+/* AMOUNT */
+
+.upi-amount {
+    font-size: 30px;
+
+    font-weight: bold;
+
+    color: #087f3e;
+
+    margin: 10px 0 18px;
+}
+
+
+/* QR BOX */
+
+.qr-box {
+    width: 280px;
+    height: 280px;
+
+    margin: 0 auto;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: white;
+
+    border: 1px solid #ddd;
+
+    border-radius: 12px;
+
+    padding: 10px;
+
+    box-sizing: border-box;
+}
+
+
+/* QR IMAGE */
+
+.qr-box img {
+    width: 250px;
+    height: 250px;
+
+    object-fit: contain;
+
+    display: block;
+}
+
+
+/* SCAN TEXT */
+
+.scan-text {
+    margin-top: 14px;
+    margin-bottom: 10px;
+
+    color: #555;
+
+    font-size: 14px;
+}
+
+
+/* UPI ID */
+
+.upi-id {
+    background: #f4f8f5;
+
+    padding: 10px;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+
+    color: #444;
+
+    margin-bottom: 18px;
+}
+
+
+/* I HAVE PAID BUTTON */
+
+.paid-btn {
+    width: 100%;
+
+    padding: 13px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #087f3e;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.paid-btn:hover {
+    background: #075b32;
+
+    transform: translateY(-1px);
+}
+
+
+/* DEMO NOTE */
+
+.demo-note {
+    margin-top: 12px;
+
+    font-size: 12px;
+
+    color: #888;
+}
+
+
+
+/* Donation target error message */
+.donation-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    margin: 15px 0 22px;
+    background: #fff1f2;
+    border: 1px solid #fecdd3;
+    border-left: 5px solid #e11d48;
+    border-radius: 12px;
+    color: #9f1239;
+    box-shadow: 0 4px 12px rgba(225, 29, 72, 0.08);
+    animation: alertSlideIn 0.3s ease-out;
+}
+
+.alert-icon {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #e11d48;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.alert-content {
+    flex: 1;
+}
+
+.alert-content strong {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 15px;
+    color: #9f1239;
+}
+
+.alert-content p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #881337;
+}
+
+.alert-close {
+    border: none;
+    background: transparent;
+    color: #9f1239;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 4px;
+}
+
+.alert-close:hover {
+    color: #e11d48;
+}
+
+@keyframes alertSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
