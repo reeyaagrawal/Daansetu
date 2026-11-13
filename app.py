@@ -58,6 +58,13 @@ db = mysql.connector.connect(
     ssl_verify_identity=True
 )
 
+@app.before_request
+def reconnect_database():
+    try:
+        db.ping(reconnect=True, attempts=3, delay=2)
+    except mysql.connector.Error:
+        app.logger.exception("Database reconnection failed")
+        raise
 def is_admin_user():
     user_id = session.get("user_id")
 
