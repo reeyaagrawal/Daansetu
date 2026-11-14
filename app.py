@@ -719,9 +719,10 @@ def signup():
 
         if password != confirm_password:
             return render_template(
-                "signup.html",
-                error="Passwords do not match!"
-            )
+        "signup.html",
+        error="Passwords do not match!",
+        error_title="Password Mismatch"
+    )
 
         hashed_password = generate_password_hash(password)
 
@@ -746,7 +747,7 @@ def signup():
                 cursor.close()
                 return render_template(
                     "signup.html",
-                    error="This email is already registered. Please use another email or login."
+                    error_title="Email Already Registered"
                 )
 
             cursor.close()
