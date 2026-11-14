@@ -1629,16 +1629,10 @@ def allocate_surplus(source_campaign_id):
 @app.route("/demo-payment/<payment_token>")
 def demo_payment(payment_token):
 
-    if "user_id" not in session:
-        return redirect(url_for("login"))
-
     payment = demo_payments.get(payment_token)
 
     if not payment:
         return "Payment session expired or not found.", 404
-
-    if payment["user_id"] != session["user_id"]:
-        return "Access Denied", 403
 
     return render_template(
         "Donation.html",
@@ -1647,29 +1641,20 @@ def demo_payment(payment_token):
         payment_token=payment_token
     )
 
-
-
 @app.route("/demo-pay/<payment_token>", methods=["POST"])
 def demo_pay(payment_token):
-
-    if "user_id" not in session:
-        return redirect(url_for("login"))
-
-    if not is_valid_csrf_token():
-        return "Invalid CSRF token. Please refresh the page and try again.", 400
 
     payment = demo_payments.get(payment_token)
 
     if not payment:
         return "Payment session expired.", 404
 
-    if payment["user_id"] != session["user_id"]:
-        return "Access Denied", 403
+    if not is_valid_csrf_token():
+        return "Invalid payment request.", 400
 
     cursor = db.cursor()
 
     try:
-        # Lock the campaign row before checking its latest target status
         cursor.execute("""
             SELECT raised_amount, target_amount
             FROM campaigns
@@ -1681,27 +1666,18 @@ def demo_pay(payment_token):
 
         if not campaign:
             db.rollback()
-            return "Selected campaign does not exist.", 400
+            return "Campaign not found.", 404
 
-        # Check duplicate payment again after acquiring the row lock
-        if payment.get("donation_id") or payment.get("status") == "paid":
+        if payment.get("status") == "paid":
             db.rollback()
             return redirect(
-                url_for(
-                    "demo_payment",
-                    payment_token=payment_token
-                )
+                url_for("demo_payment", payment_token=payment_token)
             )
 
-        # Reject payment if the campaign has already reached its target
         if float(campaign[0]) >= float(campaign[1]):
             db.rollback()
-            return (
-                "This campaign has achieved its target. "
-                "Please explore other campaigns."
-            ), 400
+            return "Campaign target achieved.", 400
 
-        # Record donation
         cursor.execute("""
             INSERT INTO donations
             (user_id, campaign_id, amount, payment_method)
@@ -1715,7 +1691,6 @@ def demo_pay(payment_token):
 
         donation_id = cursor.lastrowid
 
-        # Update campaign total
         cursor.execute("""
             UPDATE campaigns
             SET raised_amount = raised_amount + %s
@@ -1727,7 +1702,6 @@ def demo_pay(payment_token):
 
         db.commit()
 
-        # Mark payment only after successful database commit
         payment["status"] = "paid"
         payment["donation_id"] = donation_id
 
@@ -1739,13 +1713,8 @@ def demo_pay(payment_token):
         cursor.close()
 
     return redirect(
-        url_for(
-            "demo_payment",
-            payment_token=payment_token
-        )
+        url_for("demo_payment", payment_token=payment_token)
     )
-
-
 
 @app.route("/payment-status/<payment_token>")
 def payment_status(payment_token):
