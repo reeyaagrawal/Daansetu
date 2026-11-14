@@ -132,7 +132,7 @@ function closePopup() {
     <div class="popup-content">
         <span class="close-btn" onclick="closePopup()">&times;</span>
         <div class="popup-icon">⚠️</div>
-        <h3>Email Already Registered</h3>
+       <h3>{{ error_title or "Registration Error" }}</h3>
         <p>{{ error }}</p>
         <button type="button" onclick="closePopup()">OK</button>
     </div>
